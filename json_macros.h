@@ -19,41 +19,6 @@
 
 #include <nlohmann/json.hpp>
 
-/* NOTE: This macro is available as of nlohmann/json 3.4.0
- * This code has been adapted from the following github issue:
- * https://github.com/nlohmann/json/issues/1208
- * It has been updated to use a C style array in place of vector so it can
- * be used without any stl includes
- *
- * It must be used within the namespace of the enumeration passed in
- */
-#define NLOHMANN_JSON_SERIALIZE_ENUM( ENUM_TYPE, ...)                                  \
-    inline void to_json( nlohmann::json& j, const ENUM_TYPE& e)                        \
-    {                                                                                  \
-        static_assert(std::is_enum<ENUM_TYPE>::value, #ENUM_TYPE " must be an enum!"); \
-        static const std::pair<ENUM_TYPE, nlohmann::json> m[] = __VA_ARGS__;           \
-        auto it = std::find_if(std::begin(m),                                          \
-                               std::end(m),                                            \
-                               [e](const auto& ej_pair)->bool                          \
-        {                                                                              \
-            return ej_pair.first == e;                                                 \
-        });                                                                            \
-        j = ((it != std::end(m)) ? it : std::begin(m))->second;                        \
-    }                                                                                  \
-                                                                                       \
-    inline void from_json( const nlohmann::json& j, ENUM_TYPE& e)                      \
-    {                                                                                  \
-        static_assert(std::is_enum<ENUM_TYPE>::value, #ENUM_TYPE " must be an enum!"); \
-        static const std::pair<ENUM_TYPE, nlohmann::json> m[] = __VA_ARGS__;           \
-        auto it = std::find_if(std::begin(m),                                          \
-                               std::end(m),                                            \
-                               [j](const auto& ej_pair)->bool                          \
-        {                                                                              \
-            return ej_pair.second == j;                                                \
-        });                                                                            \
-        e = ((it != std::end(m)) ? it : std::begin(m))->first;                         \
-    }
-
 /*
  * This macro provides to and from json implementations for most common types
  * The macro must be used inside of the namespace for the structure

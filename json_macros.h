@@ -58,13 +58,12 @@
  * The macro must be used inside of the namespace for the structure
  */
 #define GENERATE_TO_AND_FROM_JSON()                                                                                         \
-    template <template<typename, typename, typename, typename...> class C,                                                  \
-              template <typename> class Comp,                                                                               \
-              template <typename> class A, typename K, typename T,                                                          \
+    template <template<typename...> class C,                                                                                \
+              typename K, typename T,                                                                                       \
               typename = typename std::enable_if<                                                                           \
                   std::is_integral<K>::value ||                                                                             \
                   std::is_same<K, std::string>::value>::type>                                                               \
-    void to_json(nlohmann::json &j, const C<K, T, Comp<K>, A<std::pair<const K,T> > > &mapIn)                               \
+    void to_json_map_impl(nlohmann::json &j, const C<K, T> &mapIn)                                                          \
     {                                                                                                                       \
         std::stringstream errors;                                                                                           \
         for (const auto& kv: mapIn)                                                                                         \
@@ -83,6 +82,18 @@
         {                                                                                                                   \
             std::runtime_error(errors.str());                                                                               \
         }                                                                                                                   \
+    }                                                                                                                       \
+                                                                                                                            \
+    template <typename K, typename V>                                                                                       \
+    void to_json(nlohmann::json &j, const std::map<K, V> &mapIn)                                                            \
+    {                                                                                                                       \
+        to_json_map_impl(j, mapIn);                                                                                         \
+    }                                                                                                                       \
+                                                                                                                            \
+    template <typename K, typename V>                                                                                       \
+    void to_json(nlohmann::json &j, const std::unordered_map<K, V> &mapIn)                                                  \
+    {                                                                                                                       \
+        to_json_map_impl(j, mapIn);                                                                                         \
     }                                                                                                                       \
                                                                                                                             \
     template <template <typename...> class SequenceType, typename T>                                                        \

@@ -1,13 +1,10 @@
 #pragma once
 
-#include <memory>
 #include <sstream>
-#include <string>
 
 #include <boost/fusion/include/is_sequence.hpp>
 #include <boost/fusion/include/algorithm.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
-#include <boost/lexical_cast.hpp>
 #include <boost/mpl/range_c.hpp>
 
 #include <nlohmann/json.hpp>
@@ -16,7 +13,7 @@
  * This macro provides to and from json implementations for most common types
  * The macro must be used inside of the namespace for the structure
  */
-#define GENERATE_TO_AND_FROM_JSON()                                                                                          \
+#define FUSION_JSONIFY()                                                                                                     \
     template<typename T,                                                                                                     \
              typename = typename std::enable_if<                                                                             \
                  boost::fusion::traits::is_sequence<T>::value                                                                \

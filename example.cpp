@@ -118,7 +118,7 @@ BOOST_FUSION_ADAPT_STRUCT(
     a_flist,
 )
 
-GENERATE_TO_AND_FROM_JSON()
+FUSION_JSONIFY()
 
 int main()
 {

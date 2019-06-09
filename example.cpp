@@ -1,4 +1,3 @@
-#include "json_macros.h"
 #include <tuple>
 #include <map>
 #include <set>
@@ -8,6 +7,8 @@
 #include <list>
 #include <forward_list>
 #include <iostream>
+
+#include "boost_fusion_sequence_jsonify.h"
 
 using nlohmann::json;
 
@@ -118,7 +119,7 @@ BOOST_FUSION_ADAPT_STRUCT(
     a_flist,
 )
 
-FUSION_JSONIFY()
+BOOST_FUSION_SEQUENCE_JSONIFY()
 
 int main()
 {

@@ -13,7 +13,7 @@
  * This macro provides to and from json implementations for most common types
  * The macro must be used inside of the namespace for the structure
  */
-#define FUSION_JSONIFY()                                                                                                     \
+#define BOOST_FUSION_SEQUENCE_JSONIFY()                                                                                      \
     template<typename T,                                                                                                     \
              typename = typename std::enable_if<                                                                             \
                  boost::fusion::traits::is_sequence<T>::value                                                                \
@@ -55,7 +55,8 @@
             boost::mpl::range_c<unsigned, 0, boost::fusion::result_of::size<T>::value>(),                                    \
             [&](auto index)                                                                                                  \
             {                                                                                                                \
-                using member_type = typename boost::fusion::result_of::value_at<T, boost::mpl::int_<index> >::type;          \
+                using member_type =                                                                                          \
+                    typename boost::fusion::result_of::value_at<T, boost::mpl::int_<index> >::type;                          \
                 try                                                                                                          \
                 {                                                                                                            \
                     boost::fusion::at_c<index>(t) =                                                                          \

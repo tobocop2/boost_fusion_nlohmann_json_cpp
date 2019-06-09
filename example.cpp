@@ -2,6 +2,8 @@
 #include <tuple>
 #include <map>
 #include <set>
+#include <unordered_set>
+#include <unordered_map>
 #include <array>
 #include <list>
 #include <forward_list>
@@ -29,6 +31,16 @@ struct C
     std::string breh;
     Meh meh;
 
+    bool operator==(const C &rhs) const
+    {
+      return this->bleh == rhs.bleh && this->breh == rhs.breh && this->meh == rhs.meh;
+    }
+
+    bool operator!=(const C &rhs) const
+    {
+      return !(*this == rhs);
+    }
+
     bool operator<(const C &rhs) const
     {
       return this->bleh < rhs.bleh;
@@ -39,6 +51,19 @@ struct C
       return !(*this < rhs);
     }
 };
+
+namespace std
+{
+    template <>
+    struct hash<C>
+    {
+        size_t operator()(const C& c) const
+        {
+            // Compute individual hash values for two data members and combine them using XOR and bit shifting
+            return ((hash<int>()(c.bleh) ^ (hash<std::string>()(c.breh )) ^ (hash<Meh>()(c.meh) >> 1)));
+        }
+    };
+}
 
 BOOST_FUSION_ADAPT_STRUCT(
     C,
@@ -78,6 +103,8 @@ BOOST_FUSION_ADAPT_STRUCT(
 
 struct D {
     std::set<C> c_set;
+    std::unordered_set<C> c_unordered_set;
+    std::unordered_map<int, C> c_unordered_map;
     std::array<B, 2> b_arr;
     std::forward_list<A> a_flist;
 };
@@ -85,6 +112,8 @@ struct D {
 BOOST_FUSION_ADAPT_STRUCT(
     D,
     c_set,
+    c_unordered_set,
+    c_unordered_map,
     b_arr,
     a_flist,
 )
@@ -131,10 +160,11 @@ int main()
     json AToJson = a;
     A AfromJson = AToJson.get<A>();
     json AToJsonAgain = AfromJson;
-    // std::cout << AToJson.dump(4) << std::endl;
 
     D d {
       {c, c},
+      {c, c},
+      { {1, c } },
       {b, b},
       {a, a, a}
     };

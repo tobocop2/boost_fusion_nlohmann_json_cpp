@@ -90,8 +90,7 @@
         {                                                                                                                                             \
             try                                                                                                                                       \
             {                                                                                                                                         \
-                nlohmann::json j_tmp = object;                                                                                                        \
-                j.emplace_back(j_tmp);                                                                                                                \
+                j.emplace_back(object);                                                                                                                \
             }                                                                                                                                         \
             catch(std::exception &exc)                                                                                                                \
             {                                                                                                                                         \

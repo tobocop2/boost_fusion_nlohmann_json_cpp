@@ -1,7 +1,10 @@
 #include "json_macros.h"
 #include <tuple>
 #include <map>
+#include <set>
+#include <array>
 #include <list>
+#include <forward_list>
 #include <iostream>
 
 using nlohmann::json;
@@ -25,6 +28,16 @@ struct C
     int bleh;
     std::string breh;
     Meh meh;
+
+    bool operator<(const C &rhs) const
+    {
+      return this->bleh < rhs.bleh;
+    }
+
+    bool operator>=(const C &rhs) const
+    {
+      return !(*this < rhs);
+    }
 };
 
 BOOST_FUSION_ADAPT_STRUCT(
@@ -61,6 +74,19 @@ BOOST_FUSION_ADAPT_STRUCT(
     y,
     z_int_map,
     z_tuple,
+)
+
+struct D {
+    std::set<C> c_set;
+    std::array<B, 2> b_arr;
+    std::forward_list<A> a_flist;
+};
+
+BOOST_FUSION_ADAPT_STRUCT(
+    D,
+    c_set,
+    b_arr,
+    a_flist,
 )
 
 GENERATE_TO_AND_FROM_JSON()
@@ -104,9 +130,19 @@ int main()
 
     json AToJson = a;
     A AfromJson = AToJson.get<A>();
-    json jA = a;
     json AToJsonAgain = AfromJson;
-    std::cout << AToJson.dump(4) << std::endl;
+    // std::cout << AToJson.dump(4) << std::endl;
+
+    D d {
+      {c, c},
+      {b, b},
+      {a, a, a}
+    };
+
+    json DToJson = d;
+    D DfromJson = DToJson.get<D>();
+    json DToJsonDagain = DfromJson;
+    std::cout << DToJson.dump(4) << std::endl;
 
     return 0;
 }

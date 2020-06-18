@@ -119,6 +119,13 @@
         j = *ptr;                                                                                                            \
     }                                                                                                                        \
                                                                                                                              \
+    template <typename T,                                                                                                    \
+              typename = typename std::enable_if<std::is_pointer<T>::value> >                                                \
+    void to_json(nlohmann::json &j, const T *ptr)                                                                            \
+    {                                                                                                                        \
+        j = *ptr;                                                                                                            \
+    }                                                                                                                        \
+                                                                                                                             \
     template<typename T,                                                                                                     \
              typename = typename std::enable_if<                                                                             \
                  boost::fusion::traits::is_sequence<T>::value                                                                \
@@ -311,6 +318,14 @@
     void from_json(const nlohmann::json &j, std::unique_ptr<T> &ptr)                                                         \
     {                                                                                                                        \
         ptr = std::make_unique<T>(j.get<T>());                                                                               \
+    }                                                                                                                        \
+                                                                                                                             \
+    template <typename T,                                                                                                    \
+              typename = typename std::enable_if<std::is_pointer<T>::value> >                                                \
+    void from_json(const nlohmann::json &j, T* &ptr)                                                                          \
+    {                                                                                                                        \
+       using underLyingType = typename std::remove_pointer<T>::type;                                                                  \
+       ptr = new underLyingType(j.get<underLyingType>());                                                                    \
     }                                                                                                                        \
                                                                                                                              \
     template <typename A, typename B >                                                                                       \

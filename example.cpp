@@ -6,6 +6,7 @@
 #include <array>
 #include <list>
 #include <forward_list>
+#include <memory>
 #include <iostream>
 
 #include "boost_fusion_sequence_jsonify.h"
@@ -119,6 +120,19 @@ BOOST_FUSION_ADAPT_STRUCT(
     a_flist,
 )
 
+struct E {
+    C *c_raw_ptr;
+    std::shared_ptr<C>  c_shared_ptr;
+    std::unique_ptr<C>  c_unique_ptr;
+};
+
+BOOST_FUSION_ADAPT_STRUCT(
+    E,
+    c_raw_ptr,
+    c_shared_ptr,
+    c_unique_ptr
+)
+
 BOOST_FUSION_SEQUENCE_JSONIFY()
 
 int main()
@@ -174,6 +188,20 @@ int main()
     D DfromJson = DToJson.get<D>();
     json DToJsonDagain = DfromJson;
     std::cout << DToJson.dump(4) << std::endl;
+
+    E e {
+      new C(c),
+      std::make_shared<C>(c),
+      std::make_unique<C>(c)
+    };
+
+    json EToJson = e;
+    E EfromJson = EToJson.get<E>();
+    json EToJsonEagain = EfromJson;
+    std::cout << EToJson.dump(4) << std::endl;
+
+    delete e.c_raw_ptr;
+    delete EfromJson.c_raw_ptr;
 
     return 0;
 }

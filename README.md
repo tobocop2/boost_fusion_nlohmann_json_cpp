@@ -228,28 +228,8 @@ int main()
 
 # Supported container types 
 
-## Sequence types supported:
-* array
-* vector
-* deque
-* list
-* forward_list
-
-## Ordered Associative containers Supported :
-* map **Key must be integral or string**
-* set **Key must have comparison operator or will not compile**
-
-## Unordered associative containers Supported :
-* unordered_map **Key must be integral or string **
-* unordered_set **Key MUST be hashable or will not compile **
-
-## Heterogeneous types supported:
-* pair
-* tuple 
-
-## Smart pointers supported 
-* unique_ptr
-* shared_ptr
+Supports all STL containers supported by nlohmann::json
+with the addition of shared, unique, and raw pointers
 
 # Unsupported Types with no plans to be supported
 
@@ -257,9 +237,8 @@ int main()
 * weak_ptr // requires a smart pointer to be instantiated 
 * auto_ptr // will be deprecated so no plan for this
 
-## Primitive pointer / array types not supported
-* C arrays (TODO)
-
+## Primitive types not yet supported
+* C style arrays (TODO)
 
 ## Container adaptors not yet supported and not planned to be supported:
 * stack
@@ -267,8 +246,8 @@ int main()
 * priority_queue
 
 ## Ordered Associative containers not planned to be supported  
-* multiset ** no translation to json **
+* multiset **no translation to json**
 
 ## Unordered Associative containers not supported and not planned to be supported:
-* unordered_multiset ** no translation to json **
-* unordered_multimap ** no translation to json **
+* unordered_multiset **no translation to json**
+* unordered_multimap **no translation to json**

@@ -1,5 +1,7 @@
 # README
 
+* The latest version of `nlohmann/json` now has all of the functionality provided by this project, making this library obsolete. 
+
 This library defines a bunch of generic to_json and from_json functions to easily serialize and deserialize types in any namespace
 
 It depends on nlohmann/json and a few boost headers. 
